@@ -79,26 +79,30 @@ X = [ones(m, 1) X];
 % Hint: At prediction, make sure you do the same feature normalization.
 %
 
-fprintf('Running gradient descent ...\n');
-
 % Choose some alpha value
-alpha = 1;
+alpha = [0.1;0.3;1];
 num_iters = 10;
+J_history = zeros(num_iters, length(alpha));
+
+figure;
+hold all;
+xlabel('Number of iterations');
+ylabel('Cost J');
+
+for i=1:3
+
+fprintf(['Running gradient descent for alpha=' num2str(alpha(i)) '...\n']);
 
 % Init Theta and Run Gradient Descent 
 theta = zeros(3, 1);
-[theta, J_history] = gradientDescentMulti(X, y, theta, alpha, num_iters);
+[theta, J_history(:,i)] = gradientDescentMulti(X, y, theta, alpha(i), num_iters);
 
 % Plot the convergence graph
-figure;
-plot(1:numel(J_history), J_history, '-b', 'LineWidth', 2);
-xlabel('Number of iterations');
-ylabel('Cost J');
+plot(1:numel(J_history(:,i)), J_history(:,i), '-o', 'LineWidth', 2, 'DisplayName', ['Alpha=' num2str(alpha(i))]);
 
 % Display gradient descent's result
 fprintf('Theta computed from gradient descent: \n');
 fprintf(' %f \n', theta);
-fprintf('\n');
 
 % Estimate the price of a 1650 sq-ft, 3 br house
 % ====================== YOUR CODE HERE ======================
@@ -112,6 +116,11 @@ price = (theta') * test; % You should change this
 
 fprintf(['Predicted price of a 1650 sq-ft, 3 br house ' ...
          '(using gradient descent):\n $%f\n'], price);
+fprintf('\n');
+
+end
+
+legend(gca,'show');
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
